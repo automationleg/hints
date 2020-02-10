@@ -1,0 +1,127 @@
+# run new container from image and enter shell directly
+docker run -ti ubuntu:latest bash
+
+# display containers in one column
+docker ps --format $FORMAT
+
+# run stuff in docker and remove container just after
+docker run --rm -ti ubuntu sleep 5
+
+# run a couple of commands inside
+docker run -ti ubuntu bash -c "sleep 3; echo all done"
+
+# run container in detached mode
+docker run -d -ti ubuntu bash
+
+# go back to started container
+docker attach <container name>
+
+# exit and detach from your container, but leave it running
+ctrl+p ctrl+q
+
+# check logs of docker  (debug what went wrong)
+docker logs <container name>
+
+# remove stoped container
+docker rm container_name
+
+# mapping ports from docker to host (docker run -p outside-port:inside-port/protocol)
+docker run --rm -ti -p 45678:45678 -p 123:123 --name echo-server ubuntu:14.04 bash
+# test it with netcat
+nc -lp 45678 | nc -lp 123
+
+# list ports that are mapped in container
+docker port <container name>
+
+# NETWORKING
+
+#list network settings
+docker network ls
+
+# create network
+docker create learningnet # containers added to the same net can communicate
+docker run --rm ti --net learningnet --name catserver ubuntu:14.04 bash
+
+# container can be pinged when net is created
+ping catserver
+
+# switch network
+docker network connect learningnet catserver
+
+
+# IMAGES
+
+# building new images
+docker image rm myimage:latest
+docker image rm registry-blabla.com/myimage:latest
+docker build --build-arg username=user --build-arg password=pass --build-arg myarg --no-cache -t <newname>:latest .
+docker tag <newname>:latest registry-blabla.com/<newname>:latest
+docker push registry-blabla.com/<newname>:latest
+
+# name your images
+docker commit <docker id> my-imagename:<version - optional>
+
+# remove images
+docker rmi <image id>
+docker rmi my-imagename
+
+
+# VOLUMES
+
+# mount a local directory inside container (shared-folder is inside docker)
+docker run - ti -v /Users/krzysztof/example:/shared-foler ubuntu bash
+
+# shared folders between containers(not saved locally data)
+
+# run first container with volume folder created
+docker run -ti -v /shared-data ubuntu bash
+# reuse the same volume in another container
+docker run -ti --volumes-from <previous container name> ubuntu bash
+
+# REGISTRIES
+
+# search for images
+docker search ubuntu
+
+# authenticate
+docker login <registry ooptional name>
+
+# creating and pushing your own image
+docker pull debian:sid
+docker tag debian:sid account/test-image-42:v22.2
+docker push account/test-image-42:v22.2
+
+# Dockerfile statements
+FROM - first expression
+FROM java:8
+
+MAINTAINTER Firstname Lastname <example@email.com>
+
+RUN unzip install.zip /opt/install
+ADD run.sh /run.sh -copy files
+
+# automatically uncompress after copying, same for URLs
+ADD project.tar.gz /install/
+
+# environment variables
+ENV DB_HOSR=db.prod.com
+
+ENTRYPOINT - default command to run. parameters when running docker would be used as parameters to this command
+CMD - specifies whole command to run
+
+# maps ports into the container
+EXPOSE 8080
+
+VOLUME
+WORKDIR - it's like cd to default directory
+USER - which user will run
+
+
+# Starting and using Docker Registry
+docker run -d -p 5000:5000 --restart=always --name registry registry:2
+docker tag ubuntu:14.04 localhost:5000/mycompany/my-ubuntu:99
+docker push localhost:5000/mycompany/my-ubuntu:99
+
+# archive your favourite images the standard way
+docker save -o my-images.tar.gz debian:sid busybox ubuntu:14.04
+docker load -i my-images.tar.gz
