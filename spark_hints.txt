@@ -1,0 +1,60 @@
+py_spark notes:
+
+# get first few rows of data
+df.take(n) - like df.head() in pandas. its a limit(n).collect() function
+df.head(n) - returns take(n)
+
+# get all the data frame data - Collection of Rows(can be very large)
+df.collect()
+
+# display only first few rows of data
+df.show(n)
+
+# limit the results of data and returns a DataFrame
+df.limit(n)
+
+# check the data types
+df.dtypes
+
+# display schema
+df.printSchema()
+
+# Add a Column
+df.withColumn('DoubleColumn', 2*df['Acolumn'])
+
+# rename a column
+df.withColumnRenamed(ExistingColumnName, NewColumnName)
+
+# drop a column
+df.drop('columnName')
+
+# group by a column
+df.groupBy('column')
+df.groupBy('column').count().show()
+df.groupBy('column').count().orderBy('column', ascending=False).show(10)
+
+# display 5 rows of a column
+df.select('columnName').show(5)
+
+# display first 4 rows of 2 columns
+df.select('columnA', 'columnB').show(4)
+
+# add a column with name ONE with all entries equal to 1
+from pyspark.sql.functions import lit
+rc.withColumn('ONE', lit(1)).show(5)
+
+# working with rows
+
+# get unique rows in pyspark
+df.select(column).distinct().show()
+
+# sort rows
+df.orderBy(col('column'))
+
+# append rows (same schema and column names)
+df.union(df2)
+
+## Spark functions
+from pyspark.sql import functions
+print(dir(functions))
+help(date_add)
