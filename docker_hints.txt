@@ -92,8 +92,7 @@ docker tag debian:sid account/test-image-42:v22.2
 docker push account/test-image-42:v22.2
 
 # Dockerfile statements
-FROM - first expression
-FROM java:8
+FROM - first expressionFROM java:8
 
 MAINTAINTER Firstname Lastname <example@email.com>
 

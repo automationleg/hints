@@ -1,0 +1,7 @@
+restore data from postgresql backup
+
+create db in pgadmin
+
+```
+psql -U username dbname < dbexport.pgsql
+```
