@@ -32,3 +32,13 @@ git diff --color-words
 
 to narrow output in git diff to one line
 +shift+s
+
+## Rename local and remote branch
+1. rename local
+```
+git branch -m old-name new-name
+```
+2. rename remote
+```
+git push origin :old-name new-name
+```
