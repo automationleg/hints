@@ -29,7 +29,11 @@ Add text at the end
 ```
 ansible ALL=(ALL) NOPASSWD: ALL
 ```
-5. Test with simple playbook if all works
+5. Test with simple ping or playbook if all works
+Test with ping:
+```
+ansible -i inventory <remote host> -m ping
+```
 Example playbook
 ```
 --- # install git on target host
